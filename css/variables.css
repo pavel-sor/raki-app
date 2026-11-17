@@ -1,0 +1,65 @@
+/* ===== ПОДКЛЮЧЕНИЕ ЛОКАЛЬНОГО ШРИФТА MANROPE ===== */
+@font-face {
+  font-family: 'Manrope';
+  src: url('../manrope/manrope-400-cyr.woff2') format('woff2'),
+       url('../manrope/manrope-400-lat.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('../manrope/manrope-500-cyr.woff2') format('woff2'),
+       url('../manrope/manrope-500-lat.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('../manrope/manrope-600-cyr.woff2') format('woff2'),
+       url('../manrope/manrope-600-lat.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('../manrope/manrope-700-cyr.woff2') format('woff2'),
+       url('../manrope/manrope-700-lat.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('../manrope/manrope-800-cyr.woff2') format('woff2'),
+       url('../manrope/manrope-800-lat.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===== ПЕРЕМЕННЫЕ ЦВЕТОВ И ШРИФТОВ ===== */
+:root {
+  /* Цвета (взяты с вашего макета) */
+  --color-primary: #3e2723;       /* Темно-коричневый (дерево) */
+  --color-primary-dark: #2d1a17;  /* Еще темнее для акцентов */
+  --color-accent: #d84315;        /* Оранжево-красный (кнопки) */
+  --color-accent-hover: #bf360c;  /* Темнее для наведения */
+  --color-bg: #f4f4f4;            /* Светлый фон сайта */
+  --color-surface: #ffffff;       /* Белый фон карточек */
+  --color-text-main: #333333;     /* Основной текст */
+  --color-text-muted: #777777;    /* Второстепенный текст */
+  --color-border: #e0e0e0;        /* Рамки */
+
+  /* Шрифты */
+  --font-main: 'Manrope', sans-serif;
+
+  /* Размеры контейнера */
+  --container-width: 1200px;
+}

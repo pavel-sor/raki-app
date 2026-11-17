@@ -1,0 +1,180 @@
+@import url('variables.css');
+@import url('header.css');
+@import url('hero.css');
+@import url('menu.css');
+@import url('footer.css');
+@import url('faq.css');
+@import url('modal.css');
+@import url('gallery.css');
+
+/* ===== БАЗОВЫЙ СБРОС ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Включает плавную прокрутку для всех якорей */
+}
+
+/* Добавляем отступ для всех элементов, к которым прокручиваемся */
+#map {
+  scroll-margin-top: 120px;
+  /* Отступ сверху, чтобы шапка не перекрывала карту (120px — примерная высота шапки) */
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 20px;
+    padding-top: 25px;
+  }
+}
+
+/* ===== БАННЕР COOKIE ===== */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(45, 26, 23, 0.98); /* Темный фон в цвет шапки */
+    color: #fff;
+    padding: 20px;
+    display: none; /* Скрыт по умолчанию, показываем через JS */
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.cookie-text {
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 700px;
+}
+
+.cookie-text a {
+    color: #ffb74d;
+    text-decoration: underline;
+}
+
+.cookie-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.cookie-btn {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    white-space: nowrap;
+}
+
+.cookie-btn.accept {
+    background: var(--color-accent); /* Оранжевая кнопка */
+    color: #fff;
+}
+
+.cookie-btn.accept:hover {
+    background: var(--color-accent-hover);
+}
+
+.cookie-btn.reject {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cookie-btn.reject:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+    .cookie-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+    .cookie-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+    .cookie-btn {
+        width: 100%;
+    }
+}
+
+/* ===== КНОПКА НАВЕРХ ===== */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--color-primary); /* Темно-коричневый */
+    color: #fff;
+    border: 2px solid var(--color-accent); /* Оранжевая рамка */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.3s, visibility 0.3s, transform 0.3s, background 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    background: var(--color-accent); /* Оранжевый при наведении */
+}
+
+.scroll-to-top svg {
+    stroke: #fff;
+}
+
+@media (max-width: 768px) {
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+    }
+}

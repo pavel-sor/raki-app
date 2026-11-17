@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в админку — 123 Раковая</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f4;">
+
+    <div class="admin-container"
+        style="max-width: 400px; width: 100%; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <h2 style="text-align: center; color: #3e2723;">Вход в админку</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Пароль</label>
+                <input type="password" id="password" required placeholder="Введите пароль"
+                    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+            </div>
+            <button type="submit" class="btn" id="loginBtn"
+                style="width: 100%; padding: 12px; background: #d84315; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px;">Войти</button>
+
+            <!-- 👇 НОВАЯ ССЫЛКА 👇 -->
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="#" id="forgotBtn" style="color: #777; font-size: 14px; text-decoration: underline;">Забыли
+                    пароль?</a>
+            </div>
+
+            <p id="error-msg" style="color: red; text-align: center; margin-top: 10px; font-size: 14px;"></p>
+        </form>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="index.html" style="color: #777; font-size: 14px; text-decoration: none;">&larr; Вернуться на
+                сайт</a>
+        </div>
+    </div>
+
+    <script>
+        // Если уже залогинен — перекидываем в админку сразу
+        fetch('/api/check-auth').then(res => {
+            if (res.ok) window.location.href = 'admin.html';
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            const btn = document.getElementById('loginBtn');
+
+            btn.disabled = true;
+            btn.textContent = 'Проверка...';
+            errorMsg.textContent = '';
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    window.location.href = 'admin.html'; // Переходим в админку
+                } else {
+                    errorMsg.textContent = data.error || 'Ошибка входа';
+                    btn.disabled = false;
+                    btn.textContent = 'Войти';
+                }
+            } catch (err) {
+                errorMsg.textContent = 'Ошибка сервера. Проверьте, запущен ли он.';
+                btn.disabled = false;
+                btn.textContent = 'Войти';
+            }
+        });
+
+        // Обработка кнопки "Забыли пароль?"
+        document.getElementById('forgotBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const errorMsg = document.getElementById('error-msg');
+            errorMsg.style.color = '#3e2723';
+            errorMsg.textContent = 'Отправка письма...';
+
+            try {
+                const res = await fetch('/api/forgot-password', { method: 'POST' });
+                const data = await res.json();
+
+                if (data.success) {
+                    errorMsg.style.color = 'green';
+                    errorMsg.textContent = 'Ссылка для сброса отправлена на вашу почту!';
+                } else {
+                    errorMsg.style.color = 'red';
+                    errorMsg.textContent = data.error;
+                }
+            } catch (err) {
+                errorMsg.style.color = 'red';
+                errorMsg.textContent = 'Ошибка сервера';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню — 123 Раковая</title>
+    <link rel="icon" href="img/logo.webp" type="image/webp">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ШАПКА -->
+    <header class="main-header">
+        <div class="header-container">
+
+            <!-- ЛЕВАЯ ЧАСТЬ: Телефон -->
+            <div class="header-left">
+                <a href="tel:+79836993566" class="phone" aria-label="Позвонить по номеру +7 (983) 699-35-66">
+                    <svg class="phone-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                        </path>
+                    </svg>
+                    <span class="phone-text">+7 (983) 699-35-66</span>
+                </a>
+            </div>
+
+            <!-- ЦЕНТР: Логотип -->
+            <div class="logo">
+                <a href="index.html">
+                    <img src="img/logo-header.webp" alt="123 Раковая" width="120" height="80">
+                </a>
+            </div>
+
+            <!-- ПРАВАЯ ЧАСТЬ -->
+            <div class="header-right">
+                <nav class="main-nav">
+                    <a href="index.html" class="active">Главная</a>
+                    <a href="about.html">О нас</a>
+                </nav>
+
+                <button class="burger-menu" id="burgerBtn" aria-label="Открыть меню навигации">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+
+                <button class="cart-btn" onclick="openCart()" aria-label="Открыть корзину">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count-badge" id="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ВЫПАДАЮЩЕЕ МОБИЛЬНОЕ МЕНЮ -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <span>Меню</span>
+            <button class="close-mobile-menu" id="closeMenuBtn">✕</button>
+        </div>
+        <nav class="mobile-nav">
+            <a href="index.html" class="active">Главная</a>
+            <a href="about.html">О нас</a>
+        </nav>
+    </div>
+    <!-- Затемнение фона при открытом меню -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- МАЙН -->
+    <main>
+        <!-- СЕКЦИЯ МЕНЮ (Полный каталог) -->
+        <section class="menu-section container" id="menu">
+            <h1 class="section-title">МЕНЮ</h1>
+            <div class="menu-grid" id="products">
+                <!-- Сюда JS автоматически вставит карточки товаров -->
+            </div>
+        </section>
+    </main>
+
+    <!-- ПОДВАЛ (FOOTER) -->
+    <footer class="main-footer">
+        <div class="container footer-content">
+
+            <!-- 1. Реквизиты (вместо Доставки и Оплаты) -->
+            <div class="footer-col">
+                <h4>Реквизиты</h4>
+                <ul class="footer-contacts" style="font-size: 13px; line-height: 1.8;">
+                    <li><strong>ИП Мешкова Елена Ивановна</strong></li>
+                    <li>ИНН: 564700004352</li>
+                    <li>ОГРНИП: 321565800017628</li>
+                </ul>
+            </div>
+
+            <!-- 2. Контакты -->
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <ul class="footer-contacts">
+                    <li>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>Адлер, ул. Кирова, 15</span>
+                    </li>
+                    <li>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                            </path>
+                        </svg>
+                        <a href="tel:+79884001123">+7 (988) 400-11-23</a>
+                    </li>
+                    <li>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                            </path>
+                        </svg>
+                        <a href="tel:+79836993566">+7 (983) 699-35-66</a>
+                    </li>
+                    <!-- НОВАЯ СТРОКА С EMAIL -->
+                    <li>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <a href="mailto:rakisochi123@yandex.ru">rakisochi123@yandex.ru</a>
+                    </li>
+                    <!-- Ссылка на карту -->
+                    <li>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                        </svg>
+                        <a href="#map">Мы на карте</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 3. О нас + Соцсети -->
+            <div class="footer-col">
+                <h4>О нас</h4>
+                <p class="footer-desc">Горячие раки и креветки с доставкой по Сочи, Адлеру, Сириусу и Красной Поляне.
+                </p>
+
+                <div class="social-icons">
+                    <!-- МАКС -->
+                    <a href="https://max.ru/+79884001123" target="_blank" rel="noopener noreferrer"
+                        aria-label="Написать в МАКС">
+                        <svg width="20" height="20" viewBox="0 0 1000 1000" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M508.211 878.328c-75.007 0-109.864-10.95-170.453-54.75-38.325 49.275-159.686 87.783-164.979 21.9 0-49.456-10.95-91.248-23.36-136.873-14.782-56.21-31.572-118.807-31.572-209.508 0-216.626 177.754-379.597 388.357-379.597 210.785 0 375.947 171.001 375.947 381.604.707 207.346-166.595 376.118-373.94 377.224m3.103-571.585c-102.564-5.292-182.499 65.7-200.201 177.024-14.6 92.162 11.315 204.398 33.397 210.238 10.585 2.555 37.23-18.98 53.837-35.587a189.8 189.8 0 0 0 92.71 33.032c106.273 5.112 197.08-75.794 204.215-181.95 4.154-106.382-77.67-196.486-183.958-202.574Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <!-- Telegram -->
+                    <a href="https://t.me/+79836993566" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                        </svg>
+                    </a>
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/79836993566" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижняя полоса -->
+        <div class="footer-bottom">
+            <div class="container"
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <p style="margin: 0;">&copy; 2026 123 РАКОВАРНЯ. Все права защищены.</p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <a href="privacy.html" target="_blank" class="privacy-link"
+                        style="color: #999; text-decoration: none;">Политика конфиденциальности (152-ФЗ)</a>
+                    <a href="terms.html" target="_blank" class="privacy-link"
+                        style="color: #999; text-decoration: none;">Пользовательское соглашение</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО КОРЗИНЫ -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeCart()">✕</button>
+            <h2>🛒 Ваш заказ</h2>
+
+            <div id="cartItems"></div>
+            <div class="total" id="total">Итого: 0 ₽</div>
+
+            <form id="orderForm" onsubmit="sendOrder(event)">
+                <div class="form-group">
+                    <label>Ваше имя *</label>
+                    <input type="text" id="name" required placeholder="Иван">
+                </div>
+                <div class="form-group">
+                    <label>Телефон *</label>
+                    <input type="tel" id="phone" required placeholder="+7 (988) 400-11-23">
+                </div>
+                <div class="form-group">
+                    <label>Адрес доставки</label>
+                    <input type="text" id="address" placeholder="Адлер, ул. Кирова, 15">
+                </div>
+                <div class="form-group">
+                    <label>Комментарий</label>
+                    <textarea id="comment" rows="2" placeholder="Пожелания к заказу"></textarea>
+                </div>
+
+                <!-- ЧЕКБОКС 152-ФЗ -->
+                <div class="form-group">
+                    <label
+                        style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 12px; color: #777; font-weight: normal;">
+                        <input type="checkbox" id="agree" required style="margin-top: 3px; width: auto;">
+                        <span>Я согласен на обработку персональных данных в соответствии с <a href="#"
+                                style="color: var(--color-accent); text-decoration: underline;">Политикой
+                                конфиденциальности</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Оформить заказ</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- УВЕДОМЛЕНИЕ (TOAST) -->
+    <div class="toast" id="toast"></div>
+
+    <!-- БАННЕР COOKIE -->
+    <div id="cookie-banner" class="cookie-banner">
+        <div class="cookie-text">
+            Мы используем файлы cookie для корректной работы сайта и анализа посещаемости.
+            Продолжая использовать сайт, вы соглашаетесь с <a href="privacy.html" target="_blank">Политикой
+                конфиденциальности</a>.
+        </div>
+        <button id="cookie-accept" class="cookie-btn">Принять</button>
+    </div>
+
+    <!-- КНОПКА НАВЕРХ -->
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Наверх">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+    </button>
+
+    <!-- ПОДКЛЮЧЕНИЕ СКРИПТОВ -->
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

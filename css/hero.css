@@ -1,0 +1,91 @@
+/* ===== СЕКЦИЯ HERO ===== */
+.hero {
+  background: url('../img/hero-bg.webp') center/cover no-repeat;
+  position: relative;
+  padding: 120px 20px; /* Добавили отступы по бокам для безопасности */
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px; /* Минимальная высота для баннера */
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2); /* Легкое затемнение, чтобы текст читался */
+}
+
+.hero-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: #fff;
+  margin-bottom: 30px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.9), 0 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.hero-btn {
+  display: inline-block;
+  background: rgba(62, 39, 35, 0.9); /* Темно-коричневый */
+  color: #fff;
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-btn:hover {
+  background: var(--color-accent); /* Оранжевый при наведении */
+  border-color: var(--color-accent);
+}
+
+/* =========================================
+   АДАПТАЦИЯ ДЛЯ МОБИЛЬНЫХ И ПЛАНШЕТОВ
+   ========================================= */
+@media (max-width: 992px) {
+  .hero {
+    padding: 80px 20px; /* Уменьшаем вертикальные отступы */
+    min-height: 400px;
+  }
+  
+  .hero h1 {
+    font-size: 36px; /* Уменьшаем шрифт */
+    margin-bottom: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 15px;
+    min-height: auto;
+    height: 270px; /* На мобильных центрируем картинку, чтобы раки не обрезались */
+    background-position: center; 
+  }
+  
+  .hero h1 {
+    font-size: 24px; /* Еще меньше шрифт для телефонов */
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  
+  .hero-btn {
+    padding: 12px 25px;
+    font-size: 14px;
+    width: 100%; /* Кнопка на всю ширину на телефоне */
+    max-width: 300px;
+  }
+
+}

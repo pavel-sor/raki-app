@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель — 123 Раковая</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+
+</head>
+
+<body>
+
+    <div class="admin-container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Админ-панель</h1>
+            <button class="logout-btn" onclick="logout()">Выйти</button>
+        </div>
+
+        <!-- ВКЛАДКИ -->
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab('products')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                <span>Товары</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('orders')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span>Заказы</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('analytics')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>Аналитика</span>
+            </button>
+        </div>
+
+        <!-- ВКЛАДКА 1: ТОВАРЫ -->
+        <div id="tab-products" class="tab-content">
+            <form id="productForm">
+                <input type="hidden" id="p-id">
+                <div class="form-group">
+                    <label>Название товара *</label>
+                    <input type="text" id="p-name" required placeholder="Например: Гигантский рак">
+                </div>
+                <div class="form-group">
+                    <label>Цена (в рублях) *</label>
+                    <input type="number" id="p-price" required placeholder="5000">
+                </div>
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="p-desc" rows="3" placeholder="Вкусный, крупный..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Картинка товара</label>
+                    <input type="file" id="p-file" accept="image/*" style="padding: 8px; background: #fafafa;">
+                    <input type="hidden" id="p-img">
+                    <div id="img-preview" style="margin-top: 10px;"></div>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center;">
+                        <input type="checkbox" id="p-hit"> Показывать на главной (Хит продаж)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; color: #e74c3c; font-weight: bold;">
+                        <input type="checkbox" id="p-hidden"> Скрыть товар из продажи (Не показывать на сайте)
+                    </label>
+                </div>
+                <button type="submit" class="btn" id="saveBtn">Сохранить товар</button>
+                <button type="button" class="btn btn-cancel" id="cancelBtn" style="display: none;"
+                    onclick="resetForm()">Отменить редактирование</button>
+            </form>
+
+            <div class="product-list">
+                <h2>Список товаров</h2>
+                <div id="adminProductsContainer">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 2: ЗАКАЗЫ -->
+        <div id="tab-orders" class="tab-content" style="display: none;">
+            <h2>История заказов</h2>
+            <p style="font-size: 14px; color: #777; margin-bottom: 15px;">Здесь отображаются все заказы, даже если
+                Telegram не сработал.</p>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Клиент</th>
+                        <th>Состав заказа</th>
+                        <th>Сумма</th>
+                        <th>Telegram</th>
+                        <th>Статус</th>
+                        <th>Согласие (152-ФЗ)</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersContainer">
+                    <tr>
+                        <td colspan="5">Загрузка...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ВКЛАДКА 3: АНАЛИТИКА -->
+        <div id="tab-analytics" class="tab-content" style="display: none;">
+            <h2>Аналитика заказов</h2>
+
+            <div
+                style="display: flex; gap: 15px; flex-wrap: wrap; background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <div>
+                    <label style="font-size: 14px; font-weight: 600; display: block; margin-bottom: 5px;">С:</label>
+                    <input type="date" id="startDate" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="font-size: 14px; font-weight: 600; display: block; margin-bottom: 5px;">По:</label>
+                    <input type="date" id="endDate" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+                <div style="display: flex; align-items: flex-end; gap: 10px;">
+                    <button onclick="loadAnalytics()"
+                        style="padding: 9px 15px; background: #d84315; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Показать</button>
+                    <button onclick="setPeriod('week')"
+                        style="padding: 9px 15px; background: #eee; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">За
+                        неделю</button>
+                    <button onclick="setPeriod('month')"
+                        style="padding: 9px 15px; background: #eee; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">За
+                        месяц</button>
+                </div>
+                <div style="display: flex; align-items: flex-end; gap: 10px; padding-bottom: 5px;">
+                    <label
+                        style="font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="onlyCompleted" checked> Только выполненные
+                    </label>
+                </div>
+            </div>
+
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                <div
+                    style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #d84315;">
+                    <div style="font-size: 14px; color: #777;">Выручка (выполненные)</div>
+                    <div style="font-size: 24px; font-weight: 800; color: #333;" id="stat-revenue">0 ₽</div>
+                </div>
+                <div
+                    style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #3e2723;">
+                    <div style="font-size: 14px; color: #777;">Выполненных заказов</div>
+                    <div style="font-size: 24px; font-weight: 800; color: #333;" id="stat-orders">0</div>
+                </div>
+                <div
+                    style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #3498db;">
+                    <div style="font-size: 14px; color: #777;">Средний чек</div>
+                    <div style="font-size: 24px; font-weight: 800; color: #333;" id="stat-avg">0 ₽</div>
+                </div>
+            </div>
+
+            <h3>Детализация по дням</h3>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Заказов</th>
+                        <th>Выручка</th>
+                    </tr>
+                </thead>
+                <tbody id="analyticsContainer">
+                    <tr>
+                        <td colspan="3">Выберите период и нажмите "Показать"</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

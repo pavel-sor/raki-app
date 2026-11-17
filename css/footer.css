@@ -1,0 +1,194 @@
+/* ===== ПОДВАЛ ===== */
+.main-footer {
+    background-color: #2d1a17; /* Темное дерево */
+    background-image: url('../img/footer-bg.webp'); 
+    background-size: 100% 100%; /* 👈 Растягиваем/сжимаем ровно под размер футера */
+    background-position: center;
+    background-repeat: no-repeat; /* Отключаем повторение */
+    color: #e0e0e0;
+    padding-top: 60px;
+    margin-top: 60px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-col h4 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.footer-links a {
+    color: #ccc;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #d84315;
+}
+
+.footer-contacts li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.footer-contacts svg {
+    color: #d84315; /* Оранжевые иконки */
+    flex-shrink: 0;
+}
+
+.footer-contacts a {
+    color: #ccc;
+    transition: color 0.3s;
+}
+
+.footer-contacts a:hover {
+    color: #fff;
+}
+
+.footer-desc {
+    font-size: 14px;
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Соцсети */
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #fff;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.social-icons a:hover {
+    background: #d84315;
+    transform: translateY(-3px);
+}
+
+/* Нижняя полоса */
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px 0;
+}
+
+.footer-bottom .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 13px;
+    color: #999;
+}
+
+.privacy-link {
+    color: #999;
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+.privacy-link:hover {
+    color: #fff;
+}
+
+/* =========================================
+   АДАПТАЦИЯ ФУТЕРА ДЛЯ МОБИЛЬНЫХ (до 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    .main-footer {
+        padding-top: 40px; /* Уменьшаем верхний отступ */
+        margin-top: 40px;
+    }
+
+    .footer-content {
+        /* Делаем 2 колонки на телефоне вместо 1 */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px 15px; /* Отступы между блоками: 25px сверху/снизу, 15px по бокам */
+        margin-bottom: 30px;
+    }
+
+    .footer-col h4 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .footer-col p, 
+    .footer-links li, 
+    .footer-contacts li {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* Блок "Реквизиты" и "Контакты" пусть занимает всю ширину, если нужно */
+    /* Если хотите, чтобы они были в 2 колонки, удалите это правило */
+    .footer-col:first-child {
+        grid-column: span 2; /* Растягиваем на 2 колонки */
+    }
+
+    /* Иконки соцсетей делаем чуть меньше */
+    .social-icons {
+        gap: 10px;
+    }
+    
+    .social-icons a {
+        width: 32px;
+        height: 32px;
+    }
+
+    .social-icons a svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Нижняя полоса с копирайтом */
+    .footer-bottom {
+        padding: 10px 0;
+        text-align: center;
+                margin-top: 10px;
+    }
+
+    .footer-bottom .container {
+        flex-direction: column;
+        gap: 10px;
+        font-size: 12px;
+    }
+}
+
+/* Если экран совсем маленький (до 480px), можно оставить 1 колонку */
+@media (max-width: 480px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-col:first-child {
+        grid-column: span 1;
+    }
+}
