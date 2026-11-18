@@ -223,10 +223,27 @@
     <!-- СЕКЦИЯ КАРТЫ -->
     <section class="map-section container" id="map" style="padding: 40px 0;">
         <h2 class="section-title">КАК НАС НАЙТИ</h2>
-        <div class="map-wrapper" style="overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <!-- ВСТАВЬТЕ СЮДА КОД ИЗ КОНСТРУКТОРА -->
-            <script type="text/javascript" charset="utf-8" async
-                src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ac379a60695d6c536bf95a828050644ff744c3bb72c346cf9ae3de278ee090809&amp;width=100%25&amp;height=450&amp;lang=ru_RU&amp;scroll=true"></script>
+
+        <div class="map-wrapper"
+            style="overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; padding-bottom: 20px;">
+
+            <!-- Ссылка на вашу точку в Яндекс.Картах (короткая ссылка) -->
+            <a href="https://yandex.ru/maps/-/CXSHuO-y" target="_blank" rel="noopener noreferrer"
+                aria-label="Открыть карту проезда в Яндекс.Картах" style="display: block; width: 100%;">
+
+                <!-- Статичная карта (растянута через CSS) -->
+                <img src="https://api-maps.yandex.ru/services/constructor/1.0/static/?um=constructor%3A7ed07e0d06fce09391317afcea37b22fceff14b81644331a070d43b242ef5dc3&width=600&height=400&lang=ru_RU"
+                    alt="Карта проезда к 123 Раковая, Адлер, ул. Кирова, 15"
+                    style="border: 0; width: 100%; height: auto; display: block;" />
+            </a>
+
+            <!-- Кнопка построения маршрута (ведёт на ту же короткую ссылку) -->
+            <a href="https://yandex.ru/maps/-/CXSHuO-y" target="_blank" rel="noopener noreferrer"
+                style="display: inline-block; margin-top: 15px; padding: 12px 24px; background: #d84315; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Построить маршрут
+            </a>
+
+        </div>
     </section>
 
     <!-- ПОДВАЛ (FOOTER) -->

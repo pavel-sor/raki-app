@@ -25,7 +25,7 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "https://api-maps.yandex.ru", "https://mc.yandex.ru"],
       scriptSrcAttr: ["'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      imgSrc: ["'self'", "data:", "https://api-maps.yandex.ru", "https://static.maps.2gis.com", "https://mc.yandex.ru"],
+      imgSrc: ["'self'", "data:", "https://api-maps.yandex.ru", "https://static-maps.yandex.ru", "https://static.maps.2gis.com", "https://mc.yandex.ru"],
       connectSrc: ["'self'", "https://api.telegram.org", "https://api-maps.yandex.ru", "https://mc.yandex.ru"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       frameSrc: ["'self'", "https://yandex.ru", "https://mc.yandex.ru"]
