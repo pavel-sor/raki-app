@@ -72,3 +72,17 @@ if (count === 0) {
 
 module.exports = db;
 
+// Создаем таблицу для бронирования столов, если её еще нет
+db.exec(`
+  CREATE TABLE IF NOT EXISTS reservations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    date_time TEXT NOT NULL,
+    guests_count INTEGER NOT NULL,
+    preorder_text TEXT,
+    status TEXT DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+

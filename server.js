@@ -323,6 +323,81 @@ app.get('/api/admin/stats', checkAuth, (req, res) => {
   res.json({ stats, daily });
 });
 
+// БРОНИРОВАНИЕ СТОЛОВ
+app.post('/api/reservations', async (req, res) => {
+  const { name, phone, date_time, guests_count, preorder_text } = req.body;
+
+  if (!name || !phone || !date_time || !guests_count) {
+    return res.status(400).json({ error: 'Заполните имя, телефон, дату/время и количество гостей' });
+  }
+
+  try {
+    const insert = db.prepare(`
+      INSERT INTO reservations (customer_name, phone, date_time, guests_count, preorder_text)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+
+    const reservationDate = new Date(date_time);
+    if (isNaN(reservationDate.getTime()) || reservationDate < new Date()) {
+      return res.status(400).json({ error: 'Укажите корректную дату и время (не в прошлом)' });
+    }
+
+    const result = insert.run(name, phone, date_time, guests_count, preorder_text);
+
+    // Отправка в Telegram
+    if (process.env.TG_TOKEN && process.env.TG_CHAT_ID) {
+      let msg = `🍽 *НОВОЕ БРОНИРОВАНИЕ СТОЛА*\n\n`;
+      msg += `👤 *Имя:* ${name}\n`;
+      msg += `📞 *Телефон:* ${phone}\n`;
+      msg += `📅 *Дата и время:* ${date_time}\n`;
+      msg += `👥 *Гостей:* ${guests_count}\n`;
+      if (preorder_text) msg += `📝 *Предзаказ:* ${preorder_text}\n`;
+      msg += `\n📌 *Статус:* ⏳ Ожидает подтверждения`;
+
+      await fetch(`https://api.telegram.org/bot${process.env.TG_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: process.env.TG_CHAT_ID,
+          text: msg,
+          parse_mode: 'Markdown',
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: "✅ Подтвердить бронь", callback_data: `confirm_res_${result.lastInsertRowid}` }]
+            ]
+          }
+        })
+      });
+    }
+
+    res.json({ success: true, reservationId: result.lastInsertRowid });
+  } catch (err) {
+    console.error('Ошибка бронирования:', err);
+    res.status(500).json({ error: 'Ошибка сервера при бронировании' });
+  }
+});
+
+app.get('/api/admin/reservations', checkAuth, (req, res) => {
+  const reservations = db.prepare('SELECT * FROM reservations ORDER BY created_at DESC').all();
+  res.json(reservations);
+});
+
+app.put('/api/admin/reservations/:id/status', checkAuth, (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const update = db.prepare('UPDATE reservations SET status = ? WHERE id = ?');
+  update.run(status, id);
+  res.json({ success: true });
+});
+
+app.delete('/api/admin/reservations/:id', checkAuth, (req, res) => {
+  const { id } = req.params;
+  const del = db.prepare('DELETE FROM reservations WHERE id = ?');
+  const result = del.run(id);
+  if (result.changes === 0) return res.status(404).json({ error: 'Бронь не найдена' });
+  res.json({ success: true });
+});
+
 // ================= ТОВАРЫ =================
 app.get('/api/products', (req, res) => {
   const products = db.prepare('SELECT * FROM products WHERE is_hidden = 0').all(); // 👈 ИЗМЕНЕНО
@@ -339,7 +414,7 @@ app.post('/api/products', checkAuth, (req, res) => {
   if (!name || !price) return res.status(400).json({ error: 'Название и цена обязательны' });
 
   const insert = db.prepare(`INSERT INTO products (name, price, description, image_url, is_hit, is_hidden) VALUES (?, ?, ?, ?, ?, ?)`);
-  const img = image_url || 'img/logo.webp';
+  const img = image_url || 'img/logo-header.webp';
   const hit = is_hit ? 1 : 0;
   const hidden = is_hidden ? 1 : 0;
 
@@ -430,6 +505,38 @@ async function pollTelegramUpdates() {
 
             const originalText = update.callback_query.message.text;
             const newText = originalText.replace('⏳ В обработке', '✅ *ВЫПОЛНЕН*');
+
+            await fetch(`https://api.telegram.org/bot${process.env.TG_TOKEN}/editMessageText`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: update.callback_query.message.chat.id,
+                message_id: update.callback_query.message.message_id,
+                text: newText,
+                parse_mode: 'Markdown',
+                reply_markup: { inline_keyboard: [] }
+              })
+            });
+          }
+
+          // Обработка подтверждения брони
+          if (callbackData.startsWith('confirm_res_')) {
+            const resId = callbackData.split('_')[2]; // confirm_res_123 -> 123
+
+            db.prepare("UPDATE reservations SET status = 'confirmed' WHERE id = ?").run(resId);
+
+            await fetch(`https://api.telegram.org/bot${process.env.TG_TOKEN}/answerCallbackQuery`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                callback_query_id: callbackId,
+                text: `Бронь #${resId} подтверждена!`,
+                show_alert: false
+              })
+            });
+
+            const originalText = update.callback_query.message.text;
+            const newText = originalText.replace('⏳ Ожидает подтверждения', '✅ *ПОДТВЕРЖДЕНО*');
 
             await fetch(`https://api.telegram.org/bot${process.env.TG_TOKEN}/editMessageText`, {
               method: 'POST',

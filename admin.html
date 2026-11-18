@@ -52,6 +52,16 @@
                 </svg>
                 <span>Аналитика</span>
             </button>
+            <button class="tab-btn" onclick="switchTab('reservations')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Брони</span>
+            </button>
         </div>
 
         <!-- ВКЛАДКА 1: ТОВАРЫ -->
@@ -190,7 +200,30 @@
                 </tbody>
             </table>
         </div>
-
+        <!-- ВКЛАДКА 4: БРОНИРОВАНИЯ -->
+        <div id="tab-reservations" class="tab-content" style="display: none;">
+            <h2>Бронирование столов</h2>
+            <p style="font-size: 14px; color: #777; margin-bottom: 15px;">Здесь отображаются заявки на бронирование
+                столов.</p>
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Дата заявки</th>
+                        <th>Клиент</th>
+                        <th>Дата и время визита</th>
+                        <th>Гостей</th>
+                        <th>Предзаказ</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="reservationsContainer">
+                    <tr>
+                        <td colspan="7">Загрузка...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
 

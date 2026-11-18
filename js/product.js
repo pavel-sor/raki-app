@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             <div class="product-detail-content">
                 <div class="product-detail-image">
-                    <img src="${product.image_url}" alt="${product.name}" onerror="this.src='img/logo.webp'">
+                    <img src="${product.image_url}" alt="${product.name}" onerror="this.src='img/logo-header.webp'">
                 </div>
                 <div class="product-detail-info">
                     <h1>${product.name}</h1>

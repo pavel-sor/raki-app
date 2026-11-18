@@ -36,6 +36,10 @@ function switchTab(tabName) {
         if (!document.getElementById('startDate').value) {
             setPeriod('month');
         }
+    } else if (tabName === 'reservations') { // 👈 НОВЫЙ БЛОК
+        document.querySelectorAll('.tab-btn')[3].classList.add('active');
+        document.getElementById('tab-reservations').style.display = 'block';
+        loadReservations();
     }
 }
 
@@ -65,7 +69,7 @@ async function loadAdminProducts() {
             item.className = 'admin-product-item';
             item.innerHTML = `
                 <div class="admin-product-info">
-                    <img src="${p.image_url}" alt="${p.name}" onerror="this.src='img/logo.webp'">
+                    <img src="${p.image_url}" alt="${p.name}" onerror="this.src='img/logo-header.webp'">
                     <div>
                         <h4>
                             ${p.name} 
@@ -245,8 +249,8 @@ async function loadOrders() {
             }
 
             // 👇 Согласие (152-ФЗ) 👇
-            const agreementHtml = o.agreement_accepted 
-                ? '<span style="color: #2ecc71; font-weight: bold;">✅ Да</span>' 
+            const agreementHtml = o.agreement_accepted
+                ? '<span style="color: #2ecc71; font-weight: bold;">✅ Да</span>'
                 : '<span style="color: #e74c3c; font-weight: bold;">❌ Нет</span>';
 
             const tr = document.createElement('tr');
@@ -380,6 +384,91 @@ async function deleteOrder(id) {
         } else {
             alert('Ошибка при удалении заказа');
         }
+    } catch (err) {
+        alert('Ошибка сервера');
+    }
+}
+
+// ================= БРОНИРОВАНИЯ =================
+async function loadReservations() {
+    const container = document.getElementById('reservationsContainer');
+    if (!container) return;
+
+    container.innerHTML = '<tr><td colspan="7">Загрузка...</td></tr>';
+
+    try {
+        const res = await fetch('/api/admin/reservations');
+        if (res.status === 401) return logout();
+        if (!res.ok) throw new Error('Ошибка доступа');
+        const reservations = await res.json();
+
+        if (reservations.length === 0) {
+            container.innerHTML = '<tr><td colspan="7">Броней пока нет.</td></tr>';
+            return;
+        }
+
+        container.innerHTML = '';
+        reservations.forEach(r => {
+            const d = new Date(r.created_at);
+            const date = d.toLocaleDateString('ru-RU') + ' в ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            
+            const visitDate = r.date_time ? new Date(r.date_time).toLocaleString('ru-RU') : '—';
+
+            // Статус
+            let statusHtml = '';
+            if (r.status === 'confirmed') {
+                statusHtml = `<button onclick="toggleResStatus(${r.id}, 'pending')" style="background: #2ecc71; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">✅ Подтверждена</button>`;
+            } else {
+                statusHtml = `<button onclick="toggleResStatus(${r.id}, 'confirmed')" style="background: #f1c40f; color: #333; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">⏳ Ожидает</button>`;
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td data-label="Дата заявки">${date}</td>
+                <td data-label="Клиент">
+                    <div style="text-align: right;">
+                        <strong>${r.customer_name}</strong><br>
+                        <a href="tel:${r.phone}" style="color: #d84315;">${r.phone}</a>
+                    </div>
+                </td>
+                <td data-label="Визит"><strong>${visitDate}</strong></td>
+                <td data-label="Гостей">${r.guests_count} чел.</td>
+                <td data-label="Предзаказ" style="font-size: 13px; max-width: 250px; white-space: pre-wrap;">${r.preorder_text || '—'}</td>
+                <td data-label="Статус">${statusHtml}</td>
+                <td data-label="Действия">
+                    <button onclick="deleteReservation(${r.id})" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">✕ Удалить</button>
+                </td>
+            `;
+            container.appendChild(tr);
+        });
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<tr><td colspan="7" style="color:red;">Ошибка загрузки броней</td></tr>';
+    }
+}
+
+// Смена статуса брони
+async function toggleResStatus(id, newStatus) {
+    try {
+        const res = await fetch(`/api/admin/reservations/${id}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
+        if (res.ok) loadReservations();
+        else alert('Ошибка при смене статуса');
+    } catch (err) {
+        alert('Ошибка сервера');
+    }
+}
+
+// Удаление брони (нужно добавить маршрут на сервере)
+async function deleteReservation(id) {
+    if (!confirm(`Вы уверены, что хотите удалить бронь #${id}?`)) return;
+    try {
+        const res = await fetch(`/api/admin/reservations/${id}`, { method: 'DELETE' });
+        if (res.ok) loadReservations();
+        else alert('Ошибка при удалении');
     } catch (err) {
         alert('Ошибка сервера');
     }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Раковарня — Горячие раки с доставкой</title>
-    <link rel="icon" href="img/logo.webp" type="image/webp">
+    <link rel="icon" href="img/logo-header.webp" type="image/webp">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/slider.css">
 
@@ -90,7 +90,10 @@
         <section class="hero">
             <div class="hero-container container">
                 <h1>ГОРЯЧИЕ РАКИ, <br>ЖАРЕНЫЕ КРЕВЕТКИ <br>С ДОСТАВКОЙ</h1>
-                <a href="#menu" class="hero-btn">ЗАКАЗАТЬ ОНЛАЙН</a>
+                <div class="hero-buttons">
+                    <a href="#menu" class="hero-btn">ЗАКАЗАТЬ ОНЛАЙН</a>
+                    <a href="#" onclick="openReservationModal(); return false;" class="hero-btn">ЗАБРОНИРОВАТЬ СТОЛ</a>
+                </div>
             </div>
         </section>
 
@@ -409,6 +412,40 @@
     <div class="image-modal" id="imageModal" onclick="closeImage()">
         <span class="close-image">&times;</span>
         <img id="fullImage" src="" alt="Просмотр фото">
+    </div>
+
+    <!-- Модальное окно бронирования -->
+    <div class="modal" id="reservationModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeReservationModal()">✕</button>
+            <h2>🍽 Бронирование стола</h2>
+            <form id="reservationForm" onsubmit="sendReservation(event)">
+                <div class="form-group">
+                    <label>Ваше имя *</label>
+                    <input type="text" id="res_name" required placeholder="Иван">
+                </div>
+                <div class="form-group">
+                    <label>Телефон *</label>
+                    <input type="tel" id="res_phone" required placeholder="+7 (988) 400-11-23">
+                </div>
+                <div class="form-group">
+                    <label>Дата и время *</label>
+                    <input type="datetime-local" id="res_date" required>
+                </div>
+                <div class="form-group">
+                    <label>Количество гостей *</label>
+                    <input type="number" id="res_guests" min="1" max="20" value="2" required>
+                </div>
+                <div class="form-group">
+                    <label>Предзаказ (что-то из меню?)</label>
+                    <div id="reservationProductsList"
+                        style="max-height: 200px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px; padding: 10px; background: #fafafa;">
+                        <p style="font-size: 14px; color: #777; text-align: center;">Загрузка меню...</p>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn" id="resSubmitBtn">Забронировать</button>
+            </form>
+        </div>
     </div>
 
     <!-- УВЕДОМЛЕНИЕ (TOAST) -->

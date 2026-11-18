@@ -47,7 +47,7 @@ async function loadProducts() {
     card.innerHTML = `
       <div class="product-main">
         <div class="product-img">
-          <img src="${p.image_url || 'img/logo.webp'}" alt="${p.name}" width="300" height="300" style="object-fit: cover;" onerror="this.src='img/logo.webp'; this.style.objectFit='contain';">
+          <img src="${p.image_url || 'img/logo-header.webp'}" alt="${p.name}" width="300" height="300" style="object-fit: cover;" onerror="this.src='img/logo-header.webp'; this.style.objectFit='contain';">
         </div>
         <div class="product-info">
           <div>
@@ -385,24 +385,177 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ============ КНОПКА НАВЕРХ ============ */
 document.addEventListener('DOMContentLoaded', () => {
-    const scrollToTopBtn = document.getElementById('scrollToTop');
+  const scrollToTopBtn = document.getElementById('scrollToTop');
 
-    if (scrollToTopBtn) {
-        // Показываем кнопку при прокрутке вниз на 300px
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                scrollToTopBtn.classList.add('show');
-            } else {
-                scrollToTopBtn.classList.remove('show');
-            }
-        });
+  if (scrollToTopBtn) {
+    // Показываем кнопку при прокрутке вниз на 300px
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollToTopBtn.classList.add('show');
+      } else {
+        scrollToTopBtn.classList.remove('show');
+      }
+    });
 
-        // Плавный скролл наверх при клике
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    }
+    // Плавный скролл наверх при клике
+    scrollToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
 });
+
+// --- БРОНИРОВАНИЕ СТОЛОВ ---
+function openReservationModal() {
+  document.getElementById('reservationModal').classList.add('open');
+  document.body.style.overflow = 'hidden'; // Блокируем прокрутку
+}
+
+function closeReservationModal() {
+  document.getElementById('reservationModal').classList.remove('open');
+  document.body.style.overflow = 'auto';
+}
+
+async function sendReservation(e) {
+  e.preventDefault();
+  const btn = document.getElementById('resSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Отправка...';
+
+  const data = {
+    name: document.getElementById('res_name').value.trim(),
+    phone: document.getElementById('res_phone').value.trim(),
+    date_time: document.getElementById('res_date').value,
+    guests_count: document.getElementById('res_guests').value,
+    preorder_text: document.getElementById('res_preorder').value.trim()
+  };
+
+  try {
+    const res = await fetch('/api/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) throw new Error('Ошибка отправки');
+
+    showToast('Стол забронирован! Мы свяжемся с вами ✅');
+    document.getElementById('reservationForm').reset();
+    closeReservationModal();
+  } catch (err) {
+    showToast('Ошибка: ' + err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Забронировать';
+  }
+}
+
+/* ============ ПРЕДЗАКАЗ В БРОНИРОВАНИИ ============ */
+let reservationCart = {}; // Объект для хранения выбранных товаров
+
+// Функция отрисовки списка товаров
+function renderReservationProducts() {
+    const container = document.getElementById('reservationProductsList');
+    if (!container) return;
+
+    // Если товары еще не загрузились, показываем заглушку
+    if (ALL_PRODUCTS.length === 0) {
+        container.innerHTML = '<p style="font-size: 14px; color: #777; text-align: center;">Загрузка меню...</p>';
+        return;
+    }
+
+    let html = '';
+    // Используем товары из ALL_PRODUCTS (они уже подгружены с сервера)
+    ALL_PRODUCTS.forEach(p => {
+        const qty = reservationCart[p.id] || 0;
+        html += `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+                <div style="font-size: 14px; text-align: left; padding-right: 10px;">
+                    <div style="font-weight: bold; line-height: 1.2;">${p.name}</div>
+                    <div style="color: #777; font-size: 12px;">${p.price} ₽</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+                    <button type="button" onclick="changeResQty(${p.id}, -1)" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ccc; background: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">−</button>
+                    <span style="min-width: 20px; text-align: center; font-weight: bold;">${qty}</span>
+                    <button type="button" onclick="changeResQty(${p.id}, 1)" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ccc; background: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">+</button>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// Функция изменения количества
+function changeResQty(id, delta) {
+    if (!reservationCart[id]) reservationCart[id] = 0;
+    reservationCart[id] += delta;
+    if (reservationCart[id] <= 0) delete reservationCart[id];
+    renderReservationProducts();
+}
+
+// Обновляем функцию открытия модального окна
+function openReservationModal() {
+    document.getElementById('reservationModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    
+    // Сбрасываем предзаказ при открытии
+    reservationCart = {};
+    
+    // Если товары еще не загружены, загружаем их
+    if (ALL_PRODUCTS.length === 0) {
+        fetchAllProducts().then(() => renderReservationProducts());
+    } else {
+        renderReservationProducts();
+    }
+}
+
+// Обновляем функцию отправки брони
+async function sendReservation(e) {
+    e.preventDefault();
+    const btn = document.getElementById('resSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Отправка...';
+
+    // Собираем текст предзаказа из reservationCart
+    let preorderText = '';
+    
+    for (const id in reservationCart) {
+        const p = ALL_PRODUCTS.find(x => x.id == id);
+        if (p) {
+            preorderText += `• ${p.name} × ${reservationCart[id]} = ${p.price * reservationCart[id]} ₽\n`;
+        }
+    }
+
+    const data = {
+        name: document.getElementById('res_name').value.trim(),
+        phone: document.getElementById('res_phone').value.trim(),
+        date_time: document.getElementById('res_date').value,
+        guests_count: document.getElementById('res_guests').value,
+        preorder_text: preorderText.trim()
+    };
+
+    try {
+        const res = await fetch('/api/reservations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.error || `Сервер вернул ${res.status}`);
+        }
+
+        showToast('Стол забронирован! Мы свяжемся с вами ✅');
+        document.getElementById('reservationForm').reset();
+        reservationCart = {}; // Очищаем после успеха
+        closeReservationModal();
+    } catch (err) {
+        showToast('Ошибка: ' + err.message, true);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Забронировать';
+    }
+}
