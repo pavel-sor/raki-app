@@ -78,7 +78,30 @@ app.use(session({
   }
 }));
 
-let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const PASSWORD_FILE = path.join(__dirname, '.admin-password');
+
+// Функция для чтения пароля из файла
+function getAdminPassword() {
+  try {
+    if (fs.existsSync(PASSWORD_FILE)) {
+      return fs.readFileSync(PASSWORD_FILE, 'utf8').trim();
+    }
+  } catch (err) {
+    console.error('Ошибка чтения пароля:', err);
+  }
+  return process.env.ADMIN_PASSWORD || 'admin123'; // fallback
+}
+
+// Функция для сохранения нового пароля
+function saveAdminPassword(newPassword) {
+  try {
+    fs.writeFileSync(PASSWORD_FILE, newPassword, 'utf8');
+  } catch (err) {
+    console.error('Ошибка сохранения пароля:', err);
+  }
+}
+
+let ADMIN_PASSWORD = getAdminPassword(); // Инициализация при старте
 const resetTokens = {};
 
 const transporter = nodemailer.createTransport({
@@ -103,7 +126,10 @@ function checkAuth(req, res, next) {
 // ================= МАРШРУТЫ АВТОРИЗАЦИИ =================
 app.post('/api/login', (req, res) => {
   const { password } = req.body;
-  if (password === ADMIN_PASSWORD) {
+  // Читаем актуальный пароль из файла при каждой попытке входа
+  const currentPassword = getAdminPassword(); 
+  
+  if (password === currentPassword) {
     req.session.isAdmin = true;
     res.json({ success: true });
   } else {
@@ -171,7 +197,7 @@ app.post('/api/reset-password', (req, res) => {
     return res.status(400).json({ error: 'Пароль должен быть не менее 5 символов' });
   }
 
-  ADMIN_PASSWORD = newPassword;
+  saveAdminPassword(newPassword);
   delete resetTokens[token];
 
   res.json({ success: true, message: 'Пароль успешно изменен' });
