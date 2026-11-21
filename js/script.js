@@ -292,7 +292,8 @@ function toggleFaq(element) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const faqItems = document.querySelectorAll('.faq-item');
+  const faqItems = document.querySelectorAll('.faq-section .faq-item'); // 👈 Ищем только внутри FAQ
+  
   if (faqItems.length > 0) {
     faqItems.forEach(item => {
       item.classList.add('active');
@@ -407,53 +408,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// --- БРОНИРОВАНИЕ СТОЛОВ ---
-function openReservationModal() {
-  document.getElementById('reservationModal').classList.add('open');
-  document.body.style.overflow = 'hidden'; // Блокируем прокрутку
-}
+/* ============ ПРЕДЗАКАЗ В БРОНИРОВАНИИ ============ */
+let reservationCart = {}; // Объект для хранения выбранных товаров
 
 function closeReservationModal() {
   document.getElementById('reservationModal').classList.remove('open');
   document.body.style.overflow = 'auto';
 }
-
-async function sendReservation(e) {
-  e.preventDefault();
-  const btn = document.getElementById('resSubmitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Отправка...';
-
-  const data = {
-    name: document.getElementById('res_name').value.trim(),
-    phone: document.getElementById('res_phone').value.trim(),
-    date_time: document.getElementById('res_date').value,
-    guests_count: document.getElementById('res_guests').value,
-    preorder_text: document.getElementById('res_preorder').value.trim()
-  };
-
-  try {
-    const res = await fetch('/api/reservations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-
-    if (!res.ok) throw new Error('Ошибка отправки');
-
-    showToast('Стол забронирован! Мы свяжемся с вами ✅');
-    document.getElementById('reservationForm').reset();
-    closeReservationModal();
-  } catch (err) {
-    showToast('Ошибка: ' + err.message, true);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Забронировать';
-  }
-}
-
-/* ============ ПРЕДЗАКАЗ В БРОНИРОВАНИИ ============ */
-let reservationCart = {}; // Объект для хранения выбранных товаров
 
 // Функция отрисовки списка товаров
 function renderReservationProducts() {
